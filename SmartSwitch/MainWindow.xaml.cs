@@ -22,7 +22,7 @@ namespace SmartSwitch
 
         private string initialConnectedAdapter;
         private bool isRunning = false;
-
+        private string _lastLogMessage = "";
         // متغیر جدید برای رهگیری اینکه در حال حاضر کدام آداپتور مسیر اصلی است
         private string currentActiveAdapter;
 
@@ -189,16 +189,26 @@ namespace SmartSwitch
 
         private void LogMessage(string message)
         {
+            // جلوگیری از اسپم شدن لاگ: اگر پیام دقیقاً مشابه پیام قبلی است، آن را نادیده بگیر
+            if (message == _lastLogMessage) return;
+            _lastLogMessage = message;
+
             Dispatcher.Invoke(() =>
             {
+                // اضافه کردن پیام جدید
                 LogList.Items.Add($"{DateTime.Now:HH:mm:ss} - {message}");
 
-                while (LogList.Items.Count > 12)
+                // بهینه‌سازی حافظه: نگه داشتن فقط 20 لاگ آخر و پاک کردن قدیمی‌ترها
+                while (LogList.Items.Count > 20)
                 {
                     LogList.Items.RemoveAt(0);
                 }
 
-                LogList.ScrollIntoView(LogList.Items[LogList.Items.Count - 1]);
+                // اسکرول نرم به آخرین پیام
+                if (LogList.Items.Count > 0)
+                {
+                    LogList.ScrollIntoView(LogList.Items[LogList.Items.Count - 1]);
+                }
             });
         }
     }
