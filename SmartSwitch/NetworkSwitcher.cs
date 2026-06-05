@@ -1,171 +1,104 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
-using System.Windows;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
-public class NetworkSwitcher
+namespace SmartSwitch
 {
-    private string Badap;
-    private string Padap;
-    // تعریف delegate برای لاگینگ
-    public delegate void LogHandler(string message);
-    // رویداد برای لاگینگ
-    public event LogHandler OnLog;
-
-    public string badap
+    public class NetworkSwitcher
     {
-        get { return Badap; }
-        set { Badap = value; }
-    }
-    public string padap
-    {
-        get { return Padap; }
-        set { Padap = value; }
-    }
+        private string _badap;
+        private string _padap;
 
-    private void Log(string message)
-    {
-        OnLog?.Invoke(message);
-    }
+        // تعریف delegate برای لاگینگ
+        public delegate void LogHandler(string message);
+        public event LogHandler OnLog;
 
-    public async void SwitchNetworkConnection()
-    {
-        var interfaces = NetworkInterface.GetAllNetworkInterfaces();
-        var activePadap = interfaces.FirstOrDefault(i =>
-            i.Name == Padap && i.OperationalStatus == OperationalStatus.Up);
-        var activeBadap = interfaces.FirstOrDefault(i =>
-            i.Name == Badap && i.OperationalStatus == OperationalStatus.Up);
-
-        if (activePadap != null)
+        public string badap
         {
-            Log($" فعال است: {Padap}");
-            DisableNetworkInterface(Padap);
-            EnableNetworkInterface(Badap);
-            Log("سوئیچ انجام شد.");
+            get { return _badap; }
+            set { _badap = value; }
         }
-        else if (activeBadap != null)
+        public string padap
         {
-            Log($" فعال است: {Badap}");
-            DisableNetworkInterface(Badap);
-            EnableNetworkInterface(Padap);
-            Log("سوئیچ انجام شد.");
+            get { return _padap; }
+            set { _padap = value; }
         }
-        else
+
+        private void Log(string message)
         {
-            Log("هیچ شبکه‌ای فعال نیست.");
+            OnLog?.Invoke(message);
         }
-    }
 
-    public void DisableNetworkInterface(string interfaceName)
-    {
-        ExecuteNetshCommand($"interface set interface \"{interfaceName}\" disable");
-        Log($"رابط {interfaceName} غیرفعال شد.");
-    }
+        // وارد کردن تابع بومی ویندوز برای پاکسازی آنی کش DNS
+        [DllImport("dnsapi.dll", EntryPoint = "DnsFlushResolverCache")]
+        private static extern void DnsFlushResolverCache();
 
-    public void EnableNetworkInterface(string interfaceName)
-    {
-        ExecuteNetshCommand($"interface set interface \"{interfaceName}\" enable");
-        Log($"رابط {interfaceName} فعال شد.");
-    }
-
-    private void ExecuteNetshCommand(string arguments)
-    {
-        var process = new Process
+        // متد پایه برای اجرای دستورات در پس‌زمینه
+        private void ExecuteNetshCommand(string arguments)
         {
-            StartInfo = new ProcessStartInfo
+            var process = new Process
             {
-                FileName = "netsh",
-                Arguments = arguments,
-                CreateNoWindow = true,
-                UseShellExecute = false
-            }
-        };
-        process.Start();
-        process.WaitForExit();
-    }
-    public async Task<bool> EnableNetworkInterfaceAsync(string interfaceName)
-    {
-        ExecuteNetshCommand($"interface set interface \"{interfaceName}\" enable");
-        Log($"رابط {interfaceName} فعال شد.");
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "netsh",
+                    Arguments = arguments,
+                    CreateNoWindow = true,
+                    UseShellExecute = false
+                }
+            };
+            process.Start();
+            process.WaitForExit();
+        }
 
-        // انتظار برای اتصال کامل شبکه
-        int maxAttempts = 10; // حداکثر 10 ثانیه انتظار
-        int attempts = 0;
-
-        while (attempts < maxAttempts)
+        // تغییر اولویت شبکه (جایگزین Enable/Disable)
+        public async Task SetAdapterMetricAsync(string interfaceName, int metricValue)
         {
-            var interfaces = NetworkInterface.GetAllNetworkInterfaces();
-            var networkInterface = interfaces.FirstOrDefault(i => i.Name == interfaceName);
-
-            if (networkInterface != null &&
-                networkInterface.OperationalStatus == OperationalStatus.Up &&
-                HasValidIpAddress(networkInterface))
+            await Task.Run(() =>
             {
-                Log($"رابط {interfaceName} با موفقیت متصل شد.");
-                return true;
-            }
-
-            await Task.Delay(1000); // هر ثانیه چک کن
-            attempts++;
-            Log($"در حال انتظار برای اتصال {interfaceName}... تلاش {attempts}");
+                ExecuteNetshCommand($"interface ipv4 set interface \"{interfaceName}\" metric={metricValue}");
+                Log($"اولویت رابط {interfaceName} روی {metricValue} تنظیم شد.");
+            });
         }
 
-        Log($"اتصال {interfaceName} با مشکل مواجه شد.");
-        return false;
-    }
-
-    private bool HasValidIpAddress(NetworkInterface networkInterface)
-    {
-        var ipProperties = networkInterface.GetIPProperties();
-        return ipProperties.UnicastAddresses.Any(addr =>
-            addr.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork &&
-            !addr.Address.ToString().StartsWith("169.254")); // آدرس‌های APIPA را رد می‌کند
-    }
-    public async Task DisableNetworkInterfaceAsync(string interfaceName)
-    {
-        ExecuteNetshCommand($"interface set interface \"{interfaceName}\" disable");
-        Log($"رابط {interfaceName} غیرفعال شد.");
-
-        // منتظر شوید تا کارت شبکه غیرفعال شود
-        while (true)
+        // برگرداندن تنظیمات شبکه به حالت اتوماتیک ویندوز (برای زمان خروج از برنامه)
+        public async Task ResetAdapterMetricAsync(string interfaceName)
         {
-            var interfaces = NetworkInterface.GetAllNetworkInterfaces();
-            var networkInterface = interfaces.FirstOrDefault(i => i.Name == interfaceName);
-            if (networkInterface == null || networkInterface.OperationalStatus != OperationalStatus.Up)
+            await Task.Run(() =>
             {
-                Log($"رابط {interfaceName} اکنون غیرفعال است.");
-                break;
+                ExecuteNetshCommand($"interface ipv4 set interface \"{interfaceName}\" metric=auto");
+                Log($"تنظیمات اولویت رابط {interfaceName} به حالت اتوماتیک برگشت.");
+            });
+        }
+
+        // پاکسازی فوق سریع کش DNS
+        public void FlushDns()
+        {
+            try
+            {
+                DnsFlushResolverCache();
+                Log("کش DNS فوراً پاکسازی شد (Native API).");
             }
-            await Task.Delay(500); // بررسی هر نیم ثانیه
+            catch (Exception ex)
+            {
+                Log($"خطا در پاکسازی کش DNS: {ex.Message}");
+            }
+        }
+
+        // سوییچ همزمان و فوق سریع بین آداپتور اصلی و رزرو
+        public async Task SwitchToAdapterAsync(string targetAdapter, string backupAdapter)
+        {
+            Log($"تغییر مسیر به: {targetAdapter}");
+
+            // اجرای همزمان هر دو دستور برای کاهش ۵۰ درصدی زمان سوییچ
+            var disableTask = SetAdapterMetricAsync(backupAdapter, 100);
+            var enableTask = SetAdapterMetricAsync(targetAdapter, 10);
+
+            // منتظر می‌مانیم تا هر دو با هم تمام شوند
+            await Task.WhenAll(disableTask, enableTask);
+
+            // پاکسازی آنی DNS
+            FlushDns();
         }
     }
-    public async Task SwitchNetworkConnectionAsync()
-    {
-        var interfaces = NetworkInterface.GetAllNetworkInterfaces();
-        var activePadap = interfaces.FirstOrDefault(i =>
-            i.Name == Padap && i.OperationalStatus == OperationalStatus.Up);
-        var activeBadap = interfaces.FirstOrDefault(i =>
-            i.Name == Badap && i.OperationalStatus == OperationalStatus.Up);
-
-        if (activePadap != null)
-        {
-            Log($" فعال است: {Padap}");
-            await DisableNetworkInterfaceAsync(Padap);
-            await EnableNetworkInterfaceAsync(Badap);
-            Log("سوئیچ به انجام شد.");
-        }
-        else if (activeBadap != null)
-        {
-            Log($"Wi-Fi فعال است: {Badap}");
-            await DisableNetworkInterfaceAsync(Badap);
-            await EnableNetworkInterfaceAsync(Padap);
-            Log("سوئیچ انجام شد.");
-        }
-        else
-        {
-            Log("هیچ شبکه‌ای فعال نیست.");
-        }
-    }
-
-
 }
