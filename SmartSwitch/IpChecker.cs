@@ -6,39 +6,38 @@ namespace SmartSwitch
 {
     internal class IpChecker
     {
-        private static readonly HttpClient client = new HttpClient();
-        private bool isCatchExecuted = false;
+        // استفاده از یک نمونه ثابت (Static) برای جلوگیری از Socket Exhaustion
+        private static readonly HttpClient _httpClient = new HttpClient();
 
-        // پراپرتی عمومی برای دسترسی به وضعیت
+        private bool _isCatchExecuted = false;
+
         public bool IsCatchExecuted
         {
-            get { return isCatchExecuted; }
-            set { isCatchExecuted = value; }
+            get { return _isCatchExecuted; }
+            set { _isCatchExecuted = value; }
         }
 
         public async Task<string> GetPublicIpAsync()
         {
-
             try
             {
-                using (var client = new HttpClient()) // ایجاد یک نمونه جدید HttpClient
+                // تنظیم هدرها روی همان کلاینت استاتیک (بدون ساخت کلاینت جدید)
+                _httpClient.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue
                 {
-                    client.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue
-                    {
-                        NoCache = true,
-                        NoStore = true
-                    };
+                    NoCache = true,
+                    NoStore = true
+                };
 
-                    string randomParam = Guid.NewGuid().ToString(); // پارامتر تصادفی
-                    string ip = await client.GetStringAsync($"https://api.ipify.org?random={randomParam}");
-                    return ip;
-                }
+                // استفاده از Guid برای جلوگیری از کش شدن نتیجه در سرور یا ISP
+                string randomParam = Guid.NewGuid().ToString();
 
+                string ip = await _httpClient.GetStringAsync($"https://api.ipify.org?random={randomParam}");
+
+                return ip;
             }
             catch (Exception ex)
             {
-                isCatchExecuted = true;
-
+                _isCatchExecuted = true;
                 return $"Error: {ex.Message}";
             }
         }
