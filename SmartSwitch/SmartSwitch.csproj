@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\AliSharafi.mp4" />
+    <None Remove="Assets\Comp 1_1 %282%29.mp4" />
+    <None Remove="Assets\Comp 1_1.mp4" />
+    <None Remove="Assets\Untitled-1.jpg" />
+    <None Remove="Assets\videoplayback %282%29.mp4" />
+    <None Remove="Assets\videoplayback.mp4" />
+    <None Remove="Assets\videoplayback.wmv" />
+    <None Remove="Assets\videoplayback22.mp4" />
+    <None Remove="Assets\videoplayback_1.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
+    <PackageReference Include="XamlAnimatedGif" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Untitled-1.jpg" />
+    <Content Include="Assets\AliSharafi.mp4">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Comp 1_1 (2).mp4">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Comp 1_1.mp4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\videoplayback (2).mp4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\videoplayback22.mp4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Assets\videoplayback.mp4" />
+    <Resource Include="Assets\videoplayback.wmv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Assets\videoplayback_1.gif" />
+  </ItemGroup>
+
+</Project>
