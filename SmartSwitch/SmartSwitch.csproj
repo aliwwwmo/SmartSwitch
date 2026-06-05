@@ -7,6 +7,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Authors>Aliwwwmo</Authors>
+    <Description>Auto Network Failover for Zero-Downtime</Description>
+    <Copyright>Copyright © 2026 Aliwwwmo. All</Copyright>
+    <ApplicationIcon>Assets\favicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,6 +41,7 @@
     <Content Include="Assets\Comp 1_1.mp4">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\favicon.ico" />
     <Content Include="Assets\videoplayback (2).mp4">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
