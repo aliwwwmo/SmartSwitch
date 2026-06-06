@@ -8,9 +8,9 @@
         Title="SmartSwitch" Height="450" Width="800"
         SizeChanged="Window_SizeChanged">
 
-    
+
     <Viewbox Stretch="UniformToFill">
-    <Grid Width="800" Background="#050505   ">
+        <Grid Width="800" Background="#050505   ">
 
             <MediaElement x:Name="mediaElement" 
        Source="Assets/videoplayback22.mp4" 
@@ -22,248 +22,268 @@
                           Opacity="0.5"/>
 
             <StackPanel Orientation="Horizontal">
-            <StackPanel>
-                <Canvas Width="484" Height="404" >
-                    <StackPanel  VerticalAlignment="Top" Background="Transparent" Width="492">
-                        <StackPanel Margin="50,15,0,0 " Canvas.ZIndex="1">
-                            <Path  HorizontalAlignment="Left" VerticalAlignment="Top" Fill="#CC343434" Data="M0,61.41s17.19-20.7,60.48-11.28,63-32.8,63.6-40.08S85.16,2.73,74.88,1.89,44,1.1,30.48,1.17,10.66-3.11,5.76,4.53,0,61.41,0,61.41Z" Height="229" Margin="-60,-60,0,-200" Stretch="Fill" Width="463" />
-                            <Label Content="Primary Network Adapter" Foreground="White"  FontSize="30"></Label>
-                            <ComboBox x:Name="NetworkAdapterComboBox1" HorizontalAlignment="Left" Width="221"  Height="42" Foreground="#FFFFFBFB" FontSize="15" >
-                                <ComboBox.Style>
-                                    <Style TargetType="{x:Type ComboBox}">
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="ComboBox">
-                                                    <Grid>
-                                                        <ToggleButton x:Name="ToggleButton"
+                <StackPanel>
+                    <Canvas Width="484" Height="404" >
+                        <StackPanel  VerticalAlignment="Top" Background="Transparent" Width="492">
+                            <StackPanel Margin="50,15,0,0 " Canvas.ZIndex="1">
+                                <Path  HorizontalAlignment="Left" VerticalAlignment="Top" Fill="#CC343434" Data="M0,61.41s17.19-20.7,60.48-11.28,63-32.8,63.6-40.08S85.16,2.73,74.88,1.89,44,1.1,30.48,1.17,10.66-3.11,5.76,4.53,0,61.41,0,61.41Z" Height="229" Margin="-60,-60,0,-200" Stretch="Fill" Width="463" />
+                                <Label Content="Primary Network Adapter" Foreground="White"  FontSize="30"></Label>
+                                <ComboBox x:Name="NetworkAdapterComboBox1" HorizontalAlignment="Left" Width="221"  Height="42" Foreground="#FFFFFBFB" FontSize="15" >
+                                    <ComboBox.Style>
+                                        <Style TargetType="{x:Type ComboBox}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ComboBox">
+                                                        <Grid>
+                                                            <ToggleButton x:Name="ToggleButton"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             Background="{TemplateBinding Background}"
                             IsChecked="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                                            <ToggleButton.Template>
-                                                                <ControlTemplate TargetType="ToggleButton">
-                                                                    <Border x:Name="templateRoot"
+                                                                <ToggleButton.Template>
+                                                                    <ControlTemplate TargetType="ToggleButton">
+                                                                        <Border x:Name="templateRoot"
                                     CornerRadius="20"
                                     BorderThickness="1"
                                     BorderBrush="Transparent"
                                     Background="#086c61">
-                                                                        <Grid>
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition Width="*"/>
-                                                                                <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <Path Grid.Column="1"
+                                                                            <Grid>
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="*"/>
+                                                                                    <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <Path Grid.Column="1"
                                           x:Name="Arrow"
                                           Fill="White"
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center"
                                           Data="M0,0 L4,4 L8,0 Z"/>
-                                                                        </Grid>
-                                                                    </Border>
-                                                                </ControlTemplate>
-                                                            </ToggleButton.Template>
-                                                        </ToggleButton>
-                                                        <ContentPresenter x:Name="contentPresenter"
+                                                                            </Grid>
+                                                                        </Border>
+                                                                    </ControlTemplate>
+                                                                </ToggleButton.Template>
+                                                            </ToggleButton>
+                                                            <ContentPresenter x:Name="contentPresenter"
                                 Content="{TemplateBinding SelectionBoxItem}"
                                 ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                 ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                 IsHitTestVisible="false"
                                 Margin="8,3,32,3"
                                 VerticalAlignment="Center"/>
-                                                        <Popup x:Name="PART_Popup"
+                                                            <Popup x:Name="PART_Popup"
                        AllowsTransparency="true"
                        IsOpen="{TemplateBinding IsDropDownOpen}"
                        Placement="Bottom"
                        PopupAnimation="Slide">
-                                                            <Border x:Name="dropDownBorder"
+                                                                <Border x:Name="dropDownBorder"
                             Background="#002d28"
                             BorderBrush="#001715"
                             BorderThickness="1"
                             CornerRadius="8">
-                                                                <ScrollViewer x:Name="DropDownScrollViewer" MaxHeight="200">
-                                                                    <ItemsPresenter x:Name="ItemsPresenter"
+                                                                    <ScrollViewer x:Name="DropDownScrollViewer" MaxHeight="200">
+                                                                        <ItemsPresenter x:Name="ItemsPresenter"
                                            KeyboardNavigation.DirectionalNavigation="Contained"/>
-                                                                </ScrollViewer>
-                                                            </Border>
-                                                        </Popup>
-                                                    </Grid>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ComboBox.Style>
-                            </ComboBox>
+                                                                    </ScrollViewer>
+                                                                </Border>
+                                                            </Popup>
+                                                        </Grid>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ComboBox.Style>
+                                </ComboBox>
 
-                        </StackPanel>
+                            </StackPanel>
 
-                        <StackPanel Margin="50,50,0,0" Canvas.ZIndex="0" >
-                            <Path HorizontalAlignment="Left" Fill="#CE181818" Data="M6.12,103s28-27.92,73-16.32S133.32,3.42,133.32,3.42,103.67,1.47,88,1.26,56-.92,38.76.54,15.35-.52,4.44,11.1,6.12,103,6.12,103Z" Height="402" Margin="-80,-200,0,-200" Stretch="Fill" Width="517" />
+                            <StackPanel Margin="50,50,0,0" Canvas.ZIndex="0" >
+                                <Path HorizontalAlignment="Left" Fill="#CE181818" Data="M6.12,103s28-27.92,73-16.32S133.32,3.42,133.32,3.42,103.67,1.47,88,1.26,56-.92,38.76.54,15.35-.52,4.44,11.1,6.12,103,6.12,103Z" Height="402" Margin="-80,-200,0,-200" Stretch="Fill" Width="517" />
 
-                            <Label Content="Backup Network Adapter" Foreground="White"  FontSize="30"></Label>
+                                <Label Content="Backup Network Adapter" Foreground="White"  FontSize="30"></Label>
 
-                            <ComboBox x:Name="NetworkAdapterComboBox2"  HorizontalAlignment="Left" Width="221"  Height="42" Foreground="#FFFFFBFB" FontSize="15">
-                                <ComboBox.Style>
-                                    <Style TargetType="{x:Type ComboBox}">
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="ComboBox">
-                                                    <Grid>
-                                                        <ToggleButton x:Name="ToggleButton"
+                                <ComboBox x:Name="NetworkAdapterComboBox2"  HorizontalAlignment="Left" Width="221"  Height="42" Foreground="#FFFFFBFB" FontSize="15">
+                                    <ComboBox.Style>
+                                        <Style TargetType="{x:Type ComboBox}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ComboBox">
+                                                        <Grid>
+                                                            <ToggleButton x:Name="ToggleButton"
      BorderBrush="{TemplateBinding BorderBrush}"
      Background="{TemplateBinding Background}"
      IsChecked="{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
-                                                            <ToggleButton.Template>
-                                                                <ControlTemplate TargetType="ToggleButton">
-                                                                    <Border x:Name="templateRoot"
+                                                                <ToggleButton.Template>
+                                                                    <ControlTemplate TargetType="ToggleButton">
+                                                                        <Border x:Name="templateRoot"
              CornerRadius="20"
              BorderThickness="1"
              BorderBrush="Transparent"
              Background="#086c61">
-                                                                        <Grid>
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition Width="*"/>
-                                                                                <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <Path Grid.Column="1"
+                                                                            <Grid>
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="*"/>
+                                                                                    <ColumnDefinition MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" Width="0"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <Path Grid.Column="1"
                    x:Name="Arrow"
                    Fill="White"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    Data="M0,0 L4,4 L8,0 Z"/>
-                                                                        </Grid>
-                                                                    </Border>
-                                                                </ControlTemplate>
-                                                            </ToggleButton.Template>
-                                                        </ToggleButton>
-                                                        <ContentPresenter x:Name="contentPresenter"
+                                                                            </Grid>
+                                                                        </Border>
+                                                                    </ControlTemplate>
+                                                                </ToggleButton.Template>
+                                                            </ToggleButton>
+                                                            <ContentPresenter x:Name="contentPresenter"
          Content="{TemplateBinding SelectionBoxItem}"
          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
          ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
          IsHitTestVisible="false"
          Margin="8,3,32,3"
          VerticalAlignment="Center"/>
-                                                        <Popup x:Name="PART_Popup"
+                                                            <Popup x:Name="PART_Popup"
 AllowsTransparency="true"
 IsOpen="{TemplateBinding IsDropDownOpen}"
 Placement="Bottom"
 PopupAnimation="Slide">
-                                                            <Border x:Name="dropDownBorder"
+                                                                <Border x:Name="dropDownBorder"
      Background="#002d28"
      BorderBrush="#001715"
      BorderThickness="1"
      CornerRadius="8">
-                                                                <ScrollViewer x:Name="DropDownScrollViewer" MaxHeight="200">
-                                                                    <ItemsPresenter x:Name="ItemsPresenter"
+                                                                    <ScrollViewer x:Name="DropDownScrollViewer" MaxHeight="200">
+                                                                        <ItemsPresenter x:Name="ItemsPresenter"
                     KeyboardNavigation.DirectionalNavigation="Contained"/>
-                                                                </ScrollViewer>
-                                                            </Border>
-                                                        </Popup>
-                                                    </Grid>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ComboBox.Style>
+                                                                    </ScrollViewer>
+                                                                </Border>
+                                                            </Popup>
+                                                        </Grid>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ComboBox.Style>
 
-                            </ComboBox>
+                                </ComboBox>
+
+                            </StackPanel>
 
                         </StackPanel>
+                    </Canvas>
 
-                    </StackPanel>
-                </Canvas>
-
-            </StackPanel>
-
-            <StackPanel>
-            <StackPanel Margin="5,0,0,0">
-                <Border Height="32 " Width="285" Background="#292929" CornerRadius="15" Margin="0,40,0,0"></Border>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,-25,0,0">
-                    <TextBlock Text="Connection Status:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,10,0" FontSize="14"/>
-                    <TextBlock x:Name="StatusText" Text="Attempting to Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,-0,0,0" FontSize="14" Foreground="#deff00"/>
                 </StackPanel>
 
-                <StackPanel Margin="0,15,0,0" Orientation="Horizontal">
-                    <StackPanel HorizontalAlignment="Left" Width="105" Margin="0,0,15,0">
-                        <Border HorizontalAlignment="Left" Height="32" Width="105" CornerRadius="15" Background="#292929" Margin="0,0,0,0" ></Border>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="-25" >
-                            <TextBlock Foreground="White" Text="Ping:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,10,0" FontSize="14"/>
-                            <TextBlock x:Name="PingText" Text="-" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" FontSize="14" Foreground="White"/>
-
+                <StackPanel>
+                    <StackPanel Margin="5,0,0,0">
+                        <Border Height="32 " Width="285" Background="#292929" CornerRadius="15" Margin="0,40,0,0"></Border>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,-25,0,0">
+                            <TextBlock Text="Connection Status:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,10,0" FontSize="14"/>
+                            <TextBlock x:Name="StatusText" Text="Attempting to Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,-0,0,0" FontSize="14" Foreground="#deff00"/>
                         </StackPanel>
 
-                    </StackPanel>
-                    <StackPanel>
-                        <Border HorizontalAlignment="Left" Height="32" Width="164" CornerRadius="15" Background="#292929" Margin="0,0,0,0" ></Border>
-                        <StackPanel Orientation="Horizontal" Margin="0,-25,0,0" HorizontalAlignment="Center">
-                            <TextBlock Text="IP:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,10,0" FontSize="14" Foreground="White"/>
-                            <TextBlock x:Name="ActiveConnectionText" Text="-" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" FontSize="14" Foreground="White"/>
+                        <StackPanel Margin="0,15,0,0" Orientation="Horizontal">
+                            <StackPanel HorizontalAlignment="Left" Width="105" Margin="0,0,15,0">
+                                <Border HorizontalAlignment="Left" Height="32" Width="105" CornerRadius="15" Background="#292929" Margin="0,0,0,0" ></Border>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="-25" >
+                                    <TextBlock Foreground="White" Text="Ping:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,10,0" FontSize="14"/>
+                                    <TextBlock x:Name="PingText" Text="-" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" FontSize="14" Foreground="White"/>
+
+                                </StackPanel>
+
+                            </StackPanel>
+                            <StackPanel>
+                                <Border HorizontalAlignment="Left" Height="32" Width="164" CornerRadius="15" Background="#292929" Margin="0,0,0,0" ></Border>
+                                <StackPanel Orientation="Horizontal" Margin="0,-25,0,0" HorizontalAlignment="Center">
+                                    <TextBlock Text="IP:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,10,0" FontSize="14" Foreground="White"/>
+                                    <TextBlock x:Name="ActiveConnectionText" Text="-" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0" FontSize="14" Foreground="White"/>
+
+                                </StackPanel>
+
+                            </StackPanel>
 
                         </StackPanel>
-
-                    </StackPanel>
-
-                </StackPanel>
-                    <Button Content="START" FontSize="20"  x:Name="StartButton" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0" Width="120" Height="120" Click="StartButton_Click" Foreground="White" >
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Grid>
-                                                <!-- Glow Effect -->
-                                                <Ellipse x:Name="GlowEllipse"
+                        <Button Content="START" FontSize="20"  x:Name="StartButton" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0" Width="120" Height="120" Click="StartButton_Click" Foreground="White" >
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Grid>
+                                                    <!-- Glow Effect -->
+                                                    <Ellipse x:Name="GlowEllipse"
                                    Width="{TemplateBinding Width}"
                                    Height="{TemplateBinding Height}"
                                    Fill="White"
                                    Opacity="1">
-                                                    <Ellipse.Effect>
-                                                        <BlurEffect Radius="50"/>
-                                                    </Ellipse.Effect>
-                                                </Ellipse>
+                                                        <Ellipse.Effect>
+                                                            <BlurEffect Radius="50"/>
+                                                        </Ellipse.Effect>
+                                                    </Ellipse>
 
-                                                <!-- Main Button -->
-                                                <Ellipse x:Name="ButtonEllipse"
+                                                    <!-- Main Button -->
+                                                    <Ellipse x:Name="ButtonEllipse"
                                    Fill="#2d2d2d"
                                    Stroke="Transparent"
                                    StrokeThickness="2"/>
 
-                                                <!-- Content -->
-                                                <ContentPresenter HorizontalAlignment="Center" 
+                                                    <!-- Content -->
+                                                    <ContentPresenter HorizontalAlignment="Center" 
                                             VerticalAlignment="Center"/>
-                                            </Grid>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="GlowEllipse" Property="Opacity" Value="0.5"/>
-                                                </Trigger>
-                                                <Trigger Property="IsPressed" Value="True">
-                                                    <Setter TargetName="GlowEllipse" Property="Opacity" Value="0.8"/>
-                                                    <Setter TargetName="ButtonEllipse" Property= "Fill" Value="#FF6D6A6C"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </Button.Style>
-                        <!-- دکمه محتوای -->
+                                                </Grid>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="GlowEllipse" Property="Opacity" Value="0.5"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="GlowEllipse" Property="Opacity" Value="0.8"/>
+                                                        <Setter TargetName="ButtonEllipse" Property= "Fill" Value="#FF6D6A6C"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                            <!-- دکمه محتوای -->
 
-                    </Button>
+                        </Button>
+
+                    </StackPanel>
+
 
                 </StackPanel>
 
+            </StackPanel>
+
+            <!-- عنوان برنامه -->
+
+
+
+
+
+
+            <Path  HorizontalAlignment="Left" VerticalAlignment="Top" Fill="#0f0f0f" Data="M1.18,41.28s-6.83-46.46,102-27.6S217.18,0,217.18,0s5.12,42.65,2.4,46.56,5.1,7.08-28.8,10.56-45.35,1.56-71.52-1S1.82,52.69.46,52.32,1.18,41.28,1.18,41.28Z" Height="200" Margin="-43,272,0,0" Stretch="Fill" Width="869" />
+            <ListBox Background="#0f0f0f" x:Name="LogList" Margin="0,300,0,0" BorderBrush="{x:Null}" Foreground="White" Height="70"  />
+
+            <StackPanel Margin="0,60" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+
+                <StackPanel  HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
+
+                    <Label  VerticalAlignment="Center" Content="AliXro" Foreground="White" />
+                    <Image HorizontalAlignment="Center" VerticalAlignment="Center"  Source="Assets/Youtube_logo.png" Width="26" Height="21"/>
+
+                </StackPanel>
+                <StackPanel  HorizontalAlignment="Right" VerticalAlignment="Bottom" Orientation="Horizontal">
+
+                    <Label  VerticalAlignment="Center" Content="aliww_channel" Foreground="White" />
+                    <Image HorizontalAlignment="Center" VerticalAlignment="Center"  Source="Assets/telegram-logo-png-0.png" Width="26" Height="21"/>
+
+                </StackPanel>
 
             </StackPanel>
             
-        </StackPanel>
+           
 
-        <!-- عنوان برنامه -->
-
-
-
-
-
-
-        <Path  HorizontalAlignment="Left" VerticalAlignment="Top" Fill="#0f0f0f" Data="M1.18,41.28s-6.83-46.46,102-27.6S217.18,0,217.18,0s5.12,42.65,2.4,46.56,5.1,7.08-28.8,10.56-45.35,1.56-71.52-1S1.82,52.69.46,52.32,1.18,41.28,1.18,41.28Z" Height="200" Margin="-43,272,0,0" Stretch="Fill" Width="869" />
-        <ListBox Background="#0f0f0f" x:Name="LogList" Margin="0,300,0,0" BorderBrush="{x:Null}" Foreground="White" Height="70"  />
-    </Grid>
+        </Grid>
     </Viewbox>
 </Window>

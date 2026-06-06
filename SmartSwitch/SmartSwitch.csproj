@@ -17,12 +17,14 @@
     <None Remove="Assets\AliSharafi.mp4" />
     <None Remove="Assets\Comp 1_1 %282%29.mp4" />
     <None Remove="Assets\Comp 1_1.mp4" />
+    <None Remove="Assets\telegram-logo-png-0.png" />
     <None Remove="Assets\Untitled-1.jpg" />
     <None Remove="Assets\videoplayback %282%29.mp4" />
     <None Remove="Assets\videoplayback.mp4" />
     <None Remove="Assets\videoplayback.wmv" />
     <None Remove="Assets\videoplayback22.mp4" />
     <None Remove="Assets\videoplayback_1.gif" />
+    <None Remove="Assets\Youtube_logo.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\telegram-logo-png-0.png" />
     <Resource Include="Assets\Untitled-1.jpg" />
     <Content Include="Assets\AliSharafi.mp4">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -53,6 +56,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Assets\videoplayback_1.gif" />
+    <Resource Include="Assets\Youtube_logo.png" />
   </ItemGroup>
 
 </Project>
