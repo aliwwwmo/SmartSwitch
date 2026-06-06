@@ -22,9 +22,9 @@ namespace SmartSwitch
 
         private string initialConnectedAdapter;
         private bool isRunning = false;
-        private string _lastLogMessage = "";
-        // متغیر جدید برای رهگیری اینکه در حال حاضر کدام آداپتور مسیر اصلی است
+
         private string currentActiveAdapter;
+        private string _lastLogMessage = ""; // برای جلوگیری از اسپم در لاگ
 
         public MainWindow()
         {
@@ -82,9 +82,10 @@ namespace SmartSwitch
                 PingText.Text = "";
                 ActiveConnectionText.Text = "";
                 LogList.Items.Clear();
+                _lastLogMessage = ""; // ریست کردن کش لاگ
                 LogMessage("برنامه به حالت اولیه برگشت.");
 
-                // برگرداندن تنظیمات اولویت هر دو آداپتور به حالت اتوماتیک پیش‌فرض ویندوز
+                // برگرداندن تنظیمات اولویت هر دو آداپتور به حالت اتوماتیک
                 if (!string.IsNullOrEmpty(networkSwitcher.padap))
                     await networkSwitcher.ResetAdapterMetricAsync(networkSwitcher.padap);
 
@@ -111,7 +112,7 @@ namespace SmartSwitch
             {
                 isRunning = false;
                 StartButton.Background = new SolidColorBrush(Colors.Red);
-                glowEllipse.Fill = new SolidColorBrush(Colors.Red);
+                if (glowEllipse != null) glowEllipse.Fill = new SolidColorBrush(Colors.Red);
                 LogMessage("عملیات متوقف شد.");
                 await ResetToInitialState();
                 return;
@@ -131,22 +132,25 @@ namespace SmartSwitch
                     return;
                 }
 
-                glowEllipse.Fill = new SolidColorBrush(Colors.Green);
+                if (glowEllipse != null) glowEllipse.Fill = new SolidColorBrush(Colors.Green);
                 isRunning = true;
                 StartButton.Background = new SolidColorBrush(Colors.White);
                 LogMessage("برنامه در حال اجراست...");
 
-                // تغییر مسیر اولیه: netadap1 به عنوان اصلی و netadap2 به عنوان پشتیبان تنظیم می‌شود
+                // تغییر مسیر اولیه
                 await networkSwitcher.SwitchToAdapterAsync(netadap1, netadap2);
                 currentActiveAdapter = netadap1;
 
+                // --- تغییر اصلی پرفورمنس ---
+                // گرفتن آی‌پی پابلیک فقط یک‌بار در شروع کار
+                string currentIp = await ipChecker.GetPublicIpAsync();
+                ActiveConnectionText.Text = currentIp.Length > 15 ? currentIp.Substring(0, 15) + "..." : currentIp;
+
                 while (isRunning)
                 {
-                    // نمایش نام آداپتور متصل
                     string connectionType = checker.GetConnectedAdapter();
                     StatusText.Text = connectionType.Length > 17 ? connectionType.Substring(0, 17) + "..." : connectionType;
 
-                    // فقط یک بار تابع پینگ را صدا می‌زنیم تا منابع سیستم هدر نرود
                     string ping_out = await ping.PingHelper.PingIpAsync();
 
                     if (ping_out.StartsWith("Error") || ping_out == "Unable to Ping")
@@ -154,7 +158,6 @@ namespace SmartSwitch
                         ipChecker.IsCatchExecuted = false;
                         LogMessage("ارتباط قطع شد! در حال سوییچ فوری مسیر شبکه...");
 
-                        // سوییچ سریع به مسیر جایگزین
                         if (currentActiveAdapter == netadap1)
                         {
                             await networkSwitcher.SwitchToAdapterAsync(netadap2, netadap1);
@@ -166,17 +169,22 @@ namespace SmartSwitch
                             currentActiveAdapter = netadap1;
                         }
 
-                        await Task.Delay(500); // تاخیر کوتاه برای پایداری پس از سوییچ
+                        // صبر می‌کنیم تا مسیر جدید کاملاً در ویندوز جا بیفتد
+                        await Task.Delay(1500);
+
+                        // حالا که سوییچ انجام شد، آی‌پی جدید را می‌گیریم
+                        currentIp = await ipChecker.GetPublicIpAsync();
+                        ActiveConnectionText.Text = currentIp.Length > 15 ? currentIp.Substring(0, 15) + "..." : currentIp;
                     }
                     else
                     {
                         PingText.Text = ping_out.Length > 4 ? ping_out.Substring(0, 4) + "..." : ping_out;
 
-                        string activeIp = await ipChecker.GetPublicIpAsync();
-                        ActiveConnectionText.Text = activeIp.Length > 15 ? activeIp.Substring(0, 15) + "..." : activeIp;
+                        // اینجا دیگر خبری از دریافت آی‌پی نیست! فقط لاگ می‌ندازیم
+                        LogMessage($"Ping: {ping_out}, IP: {currentIp}");
 
-                        LogMessage($"Ping: {ping_out}, IP: {activeIp}");
-                        await Task.Delay(1000);
+                        // افزایش زمان استراحت به 1.5 ثانیه برای جلوگیری از پکت‌لاست
+                        await Task.Delay(1500);
                     }
                 }
             }
@@ -185,6 +193,7 @@ namespace SmartSwitch
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             // منطق دکمه استاپ را در صورت نیاز اینجا قرار دهید
+            // همشو بردم توی استارت بهتره حذفش کنم
         }
 
         private void LogMessage(string message)
@@ -198,7 +207,7 @@ namespace SmartSwitch
                 // اضافه کردن پیام جدید
                 LogList.Items.Add($"{DateTime.Now:HH:mm:ss} - {message}");
 
-                // بهینه‌سازی حافظه: نگه داشتن فقط 20 لاگ آخر و پاک کردن قدیمی‌ترها
+                // بهینه‌سازی حافظه: نگه داشتن فقط 20 لاگ آخر
                 while (LogList.Items.Count > 20)
                 {
                     LogList.Items.RemoveAt(0);
