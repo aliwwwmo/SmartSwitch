@@ -28,7 +28,14 @@ namespace SmartSwitch
 
         public MainWindow()
         {
+           
+
             InitializeComponent();
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+
+            
+            VersionLabel.Content = $"v{version}";
+
             LoadNetworkAdapters();
             networkSwitcher.OnLog += LogMessage;
             initialConnectedAdapter = checker.GetConnectedAdapter();

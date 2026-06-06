@@ -175,6 +175,7 @@ PopupAnimation="Slide">
 
                 <StackPanel>
                     <StackPanel Margin="5,0,0,0">
+                        <Label x:Name="VersionLabel" Foreground="Gray" FontSize="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
                         <Border Height="32 " Width="285" Background="#292929" CornerRadius="15" Margin="0,40,0,0"></Border>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,-25,0,0">
                             <TextBlock Text="Connection Status:" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,10,0" FontSize="14"/>
